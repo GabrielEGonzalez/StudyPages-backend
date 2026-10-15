@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  extensions = [citext, pgcrypto, pg_trgm]
+}
+
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String
+  email        String    @unique @db.Citext
+  passwordHash String
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime  @updatedAt @db.Timestamptz(6)
+  subjects     Subject[]
+  @@map("User")
+}
+
+model Subject {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  name        String
+  description String?
+  color       String?
+  icon        String?
+  position    Int       @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(6)
+  deletedAt   DateTime? @db.Timestamptz(6)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pages       Page[]
+  @@index([userId])
+  @@map("Subject")
+}
+
+model Page {
+  id         String    @id @default(uuid()) @db.Uuid
+  subjectId  String    @db.Uuid
+  title      String
+  content    String    @default("")
+  position   Int       @default(0)
+  isFavorite Boolean   @default(false)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @updatedAt @db.Timestamptz(6)
+  deletedAt  DateTime? @db.Timestamptz(6)
+  subject    Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  @@index([subjectId])
+  @@map("Page")
+}
