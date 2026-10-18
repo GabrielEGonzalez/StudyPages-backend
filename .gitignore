@@ -67,3 +67,5 @@ dist/
 .windsurf/skills
 
 prisma/.config.ts
+
+mvp-notas.html
