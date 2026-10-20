@@ -9,7 +9,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { PagesService } from './pages.service.js';
-import { CreatePageDto } from './dto/create-page.dto.js';
+import { CreatePageDto } from './dto/create-page.dto.js';   
 import { UpdatePageDto } from './dto/update-page.dto.js';
 
 @Controller('pages')
